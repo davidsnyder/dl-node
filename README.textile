@@ -1,0 +1,30 @@
+h1. dl-node
+
+h2. Installation
+
+1. Install "Node":http://nodejs.org/
+
+2. Install npm - @curl http://npmjs.org/install.sh | sh@
+
+3. Install "Redis":http://redis.io
+
+@npm install@ will download dependencies for the project
+
+@redis-server@ will start a redis server listening by default on port 6379
+
+@node app.js@ will start the node server on port 3000
+
+p.
+
+The rails backend responds to a vote request by pinging the redis server listening on the node app.
+
+`Redis::Client.publish dl.channel.votes "{'meal_id':'139a24','user_id':'foobarbaz','restaurant_id':'a2a828d'}"`
+
+The node app listens on a websocket using socket.io, and subscribes to changes to this redis channel
+
+Meal
+<pre><code>{"id" => "3o2309","vote_count" => 3,"ballot" => [{"restaurant_id"=> "1fa2f","vote_count" => 3,"votes"=>['@userfoo','@userbar','@userbaz']}]}</code></pre>
+
+Votes come in as a colon delimited tuple string:
+
+@"meal_id:user_id:restaurant_id"@
