@@ -21,26 +21,24 @@ io.sockets.on('connection', function(client) {
         var vote_keys = vote.split(":");
         var key = vote_keys[0]+":"+vote_keys[1];
         redis_store.set(key,vote_keys[2]); //register this vote in the db
-
         var incoming_session = vote_keys[0];        
         client.get('vote_session',function(err,vote_session) { //we only want to send updates to clients in this vote session
             if(vote_session == incoming_session) { 
-                
-                var session = {'id':vote_session,'total':0,'votes':{'carlos':'fix me'}};
-                
-                redis_store.keys(vote_keys[0]+":*", function (err, votes) { //grab all votes for this meal
+                var session = {'id':vote_session,'total':0,'votes':{}};
+                redis_store.keys(vote_keys[0]+":*", function(err, votes) { //grab all votes for this meal
                     session['total'] = votes.length;
-                    votes.forEach(function (vote) {  //assemble response payload 
+                    votes.forEach(function(vote) {  //assemble response payload 
                         redis_store.get(vote,function(err,rest_id) {
                             if(session['votes'][rest_id] == undefined) {
                                 session['votes'][rest_id] = [];           
                             }                                              
                             session['votes'][rest_id].push(vote.split(':')[1]);           
+                            if(votes[votes.length-1] == vote) { //hackity-hack (don't talk back)
+                                client.emit('vote', JSON.stringify(session));                             
+                            }
                         });
                     });
                 });
-                //How do I get the changes made in the function closures above to reflect in @session@?                
-                client.emit('vote', JSON.stringify(session));                             
             }
         });
     });
