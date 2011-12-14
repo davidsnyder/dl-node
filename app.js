@@ -14,6 +14,21 @@ io.sockets.on('connection', function(client) {
     client.on('join', function(vote_session) {
         client.set('vote_session', vote_session);
         client.join(vote_session);
+        var session = {'id':vote_session,'total':0,'votes':{}};
+        redis_store.keys(vote_session+":*", function(err, votes) { //grab all votes for this meal
+            session['total'] = votes.length;
+            votes.forEach(function(vote) {  //assemble response payload 
+                redis_store.get(vote,function(err,rest_id) {
+                    if(session['votes'][rest_id] == undefined) {
+                        session['votes'][rest_id] = [];           
+                    }                                              
+                    session['votes'][rest_id].push(vote.split(':')[1]);           
+                    if(votes[votes.length-1] == vote) { 
+                        client.emit('join_confirm', JSON.stringify(session));                             
+                    }
+                });
+            });
+        });
         console.log("user joined /"+vote_session);
     });
 
