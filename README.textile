@@ -20,29 +20,6 @@ The Rails backend responds to a vote request by pinging the Redis server listeni
 
 The Node app listens on a Websocket using "socket.io":http://socket.io, and subscribes to changes to this Redis channel.
 
-Redis receives the following vote object as JSON:
+When a vote is cast, all browsers viewing that session will be sent an updated JSON copy of the ballot to render.
 
-<pre><code>
-      {
-        "session_id" => "8060a29e2",
-        "vote" => {
-        "user" => {
-          "id" => "@outsnyder","name" => "David Snyder"
-        },
-        "option" => {
-          "id" => "10abd3d-factual-id","name" => "Subway"
-        }
-      }
-</code></pre>
-
-And the updated JSON session object is broadcast to all connected clients with the same @session_id@:
-
-<pre><code>
-{
-  "session_id":"8060a29e2",
-  "total_votes":1,
-  "options": {
-    '10abd3d-factual-id':{'id':'10abd3d-factual-id','name':'Subway','votes': [{'name':'David Snyder','id':'@outsnyder'}]}
-  }
-}
-</code></pre>
+Currently, a full copy of the ballot is broadcast with each vote. It would be preferable to only send diffs.
