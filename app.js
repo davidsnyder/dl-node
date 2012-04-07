@@ -13,7 +13,7 @@ if(process.env.HEROKU_DEPLOY) {
 
 io.sockets.on('connection', function(client) {
     
-    const sub = redis.createClient(); //create a new subscriber connection        
+    var sub = redis.createClient(); //create a new subscriber connection        
     
     //Heroku production authentication
     if (process.env.REDISTOGO_URL) {
