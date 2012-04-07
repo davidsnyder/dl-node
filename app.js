@@ -13,13 +13,13 @@ if(process.env.HEROKU_DEPLOY) {
 
 io.sockets.on('connection', function(client) {
     
-    var sub = redis.createClient(); //create a new subscriber connection        
-    
     //Heroku production authentication
     if (process.env.REDISTOGO_URL) {
         var rtg = require("url").parse(process.env.REDISTOGO_URL);
-        sub = redis.createClient(rtg.port, rtg.hostname);
+        var sub = redis.createClient(rtg.port, rtg.hostname);
         sub.auth(rtg.auth.split(":")[1]);
+    } else {
+        var sub = redis.createClient(); //create a new subscriber connection        
     }
     
     sub.subscribe(channel_name);  //listen for messages published on this channel
