@@ -15,9 +15,12 @@ io.sockets.on('connection', function(client) {
     
     //Heroku production authentication
     if (process.env.REDISTOGO_URL) {
+        console.log("HERE");
         var rtg = require("url").parse(process.env.REDISTOGO_URL);
+        console.log(rtg);
         var sub = redis.createClient(rtg.port, rtg.hostname);
         sub.auth(rtg.auth.split(":")[1]);
+        console.log(sub);
     } else {
         var sub = redis.createClient(); //create a new subscriber connection        
     }
