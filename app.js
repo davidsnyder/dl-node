@@ -1,6 +1,7 @@
 const channel_name = 'dl.channel.votes';
 const redis = require('redis');
-const io = require('socket.io').listen(3000);
+var port = process.env.PORT || 3000;
+const io = require('socket.io').listen(port);
 
 io.sockets.on('connection', function(client) {
     
