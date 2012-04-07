@@ -1,12 +1,20 @@
-var channel_name = 'dl.channel.votes';
-
+const channel_name = 'dl.channel.votes';
 const redis = require('redis');
-const redis_store = redis.createClient();
 const io = require('socket.io').listen(3000);
 
 io.sockets.on('connection', function(client) {
-
-    const sub = redis.createClient(); //create a new subscriber connection
+    
+    const sub;
+    
+    //Heroku production authentication
+    if (process.env.REDISTOGO_URL) {
+        var rtg = require("url").parse(process.env.REDISTOGO_URL);
+        sub = redis.createClient(rtg.port, rtg.hostname);
+        sub.auth(rtg.auth.split(":")[1]);
+    } else {
+        sub = redis.createClient(); //create a new subscriber connection        
+    }
+    
     sub.subscribe(channel_name);  //listen for messages published on this channel
 
     client.on('join', function(session_id) {
