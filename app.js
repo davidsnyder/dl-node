@@ -3,6 +3,14 @@ const redis = require('redis');
 var port = process.env.PORT || 3000;
 const io = require('socket.io').listen(port);
 
+// Heroku Cedar stack does not support Websockets yet, force long poll
+if(process.env.HEROKU_DEPLOY) {
+    io.configure(function () { 
+        io.set("transports", ["xhr-polling"]); 
+        io.set("polling duration", 10);
+    });    
+}
+
 io.sockets.on('connection', function(client) {
     
     const sub;

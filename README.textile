@@ -26,3 +26,4 @@ h2. Deployment
 
 1. @heroku addons:add redistogo@
 2. @REDISTOGO_URL@ will be set by Heroku in the @process.env@ hash
+3. heroku config:add HEROKU_DEPLOY=true
