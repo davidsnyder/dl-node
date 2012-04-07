@@ -1,7 +1,7 @@
 const channel_name = 'dl.channel.votes';
 const redis = require('redis');
-var port = process.env.PORT || 3000;
-const io = require('socket.io').listen(port);
+var port = parseInt(process.env.PORT) || 3000; //process.env.PORT is a string, and socket.io will blow up
+var io = require('socket.io').listen(port);
 
 // Heroku Cedar stack does not support Websockets yet, force long poll
 if(process.env.HEROKU_DEPLOY) {
@@ -13,15 +13,11 @@ if(process.env.HEROKU_DEPLOY) {
 
 io.sockets.on('connection', function(client) {
 
-    console.log(process.env);
     //Heroku production authentication
     if (process.env.REDISTOGO_URL) {
-        console.log("HERE");
         var rtg = require("url").parse(process.env.REDISTOGO_URL);
-        console.log(rtg);
         var sub = redis.createClient(rtg.port, rtg.hostname);
         sub.auth(rtg.auth.split(":")[1]);
-        console.log(sub);
     } else {
         var sub = redis.createClient(); //create a new subscriber connection        
     }
