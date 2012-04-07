@@ -12,7 +12,8 @@ if(process.env.HEROKU_DEPLOY) {
 }
 
 io.sockets.on('connection', function(client) {
-    
+
+    console.log(process.env);
     //Heroku production authentication
     if (process.env.REDISTOGO_URL) {
         console.log("HERE");
