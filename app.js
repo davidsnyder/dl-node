@@ -21,7 +21,7 @@ io.sockets.on('connection', function(client) {
     client.on('join', function(session_id) {
         client.set('vote_session', session_id);
         client.join(session_id);
-        console.log("user joined /"+session_id);
+        //console.log("user joined /"+session_id);
     });
 
     sub.on("message", function(channel, session) {
@@ -37,7 +37,7 @@ io.sockets.on('connection', function(client) {
         client.get('vote_session',function(err,vote_session) {
             client.leave("/"+vote_session);
             sub.quit();
-            console.log("user left /"+vote_session);                        
+            //console.log("user left /"+vote_session);                        
         });
     });
     
