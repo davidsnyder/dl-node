@@ -21,5 +21,3 @@ The Rails backend responds to a vote request by pinging the Redis server listeni
 The Node app listens on a Websocket using "socket.io":http://socket.io, and subscribes to changes to this Redis channel.
 
 When a vote is cast, all browsers viewing that session will be sent an updated JSON copy of the ballot to render.
-
-Currently, a full copy of the ballot is broadcast with each vote. It would be preferable to only send diffs.
