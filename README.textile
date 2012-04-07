@@ -12,7 +12,7 @@ h2. Installation
 
 @redis-server@ will start a Redis server listening by default on port 6379
 
-@node app.js@ will start the Node server on port 3000
+@node app.js@ will start the Node server on port 3000. Or use Foreman to run the @Procfile@
 
 h2. How it works
 
@@ -21,3 +21,8 @@ The Rails backend responds to a vote request by pinging the Redis server listeni
 The Node app listens on a Websocket using "socket.io":http://socket.io, and subscribes to changes to this Redis channel.
 
 When a vote is cast, all browsers viewing that session will be sent an updated JSON copy of the ballot to render.
+
+h2. Deployment
+
+1. @heroku addons:add redistogo@
+2. @REDISTOGO_URL@ will be set by Heroku in the @process.env@ hash
