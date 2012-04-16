@@ -1,6 +1,6 @@
 h1. dl-node
 
-h2. Installation
+h3. Installation
 
 1. Install "Node":http://nodejs.org/
 
@@ -8,22 +8,23 @@ h2. Installation
 
 3. Install "Redis":http://redis.io
 
-@npm install@ will download dependencies for the project
+h3. How to Run
 
-@redis-server@ will start a Redis server listening by default on port 6379
+1. @npm install@ will download dependencies for the project
 
-@node app.js@ will start the Node server on port 3000. Or use Foreman to run the @Procfile@
+2. @redis-server &@ will start a Redis server listening by default on port 6379
 
-h2. How it works
+3. @node app.js@ will start the Node server on port 3000. Or use Foreman to run the @Procfile@
 
-The Rails backend responds to a vote request by pinging the Redis server listening on the node app.
+h3. How it works
+
+The Rails backend responds to a vote request by pinging the Redis server listening on the Node app.
 
 The Node app listens on a Websocket using "socket.io":http://socket.io, and subscribes to changes to this Redis channel.
 
 When a vote is cast, all browsers viewing that session will be sent an updated JSON copy of the ballot to render.
 
-h2. Deployment
+h3. Heroku Deployment
 
-1. @heroku addons:add redistogo@
-2. @REDISTOGO_URL@ will be set by Heroku in the @process.env@ hash
-3. heroku config:add HEROKU_DEPLOY=true
+1. @heroku addons:add redistogo@ (@REDISTOGO_URL@ will be set by Heroku in the @process.env@ hash)
+2. @heroku config:add HEROKU_DEPLOY=true@ (Forces socket.io to use long polling instead of websockets)
